@@ -1,64 +1,162 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>BrigandZe – Jouw Paspoort</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet" />
 <style>
-  :root{ --accent: rgb(0,101,59); }
-  body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:#000; color:#fff; }
-  .wrap{ max-width:700px; margin:0 auto; padding:24px; }
-  .card{ background:#0e0e0e; border:2px solid var(--accent); border-radius:18px; padding:20px; box-shadow:0 0 24px rgba(0,101,59,.3); }
-  h1{ margin:0 0 6px; color:var(--accent); font-size:24px; }
-  .field{ background:#0a0a0a; border:1px solid #1f1f1f; border-radius:12px; padding:10px 12px; margin:10px 0; }
-  .field b{ color:var(--accent); }
-  .btn{ display:inline-block; margin-top:14px; padding:12px 18px; border-radius:999px; border:2px solid var(--accent);
-        background:rgba(0,101,59,.15); color:#fff; text-decoration:none; }
-  .btn:hover{ background:rgba(0,101,59,.3); }
-  .small{ color:#bbb; font-size:12px; margin-top:10px }
+  :root{ --accent: rgb(0,101,59); --bg:#000; --card:#0e0e0e; --text:#fff; --muted:#b6f7d6; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:"Cinzel", serif; background:var(--bg); color:var(--text); }
+  .wrap{ max-width:880px; margin:0 auto; padding:26px 18px; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+  .card{
+    width:min(820px, 100%);
+    background:
+      radial-gradient(900px 420px at 50% -10%, rgba(0,101,59,.18), transparent 60%),
+      var(--card);
+    border:3px solid var(--accent);
+    border-radius:26px;
+    padding:26px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 0 30px rgba(0,101,59,.35);
+    position:relative; overflow:hidden;
+  }
+  .card::before{
+    content:"BrigandZe Rugby";
+    position:absolute; inset:auto 0 8% 0;
+    text-align:center;
+    transform:rotate(-12deg);
+    font-weight:900; font-size:70px; color:rgba(255,255,255,0.035);
+    pointer-events:none;
+  }
+
+  .emoji{
+    display:grid; place-items:center;
+    width:120px; height:120px; margin:0 auto 8px;
+    border:2px dashed var(--accent); border-radius:22px; background:#0a0a0a;
+    font-size:76px; line-height:1;
+  }
+
+  h1{ margin:6px 0 2px; text-align:center; color:var(--accent); font-weight:900; font-size:26px; }
+  .subtitle{ text-align:center; color:var(--muted); font-size:12px; margin-bottom:14px; }
+
+  .grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:760px){ .grid{ grid-template-columns:1fr; } }
+
+  .field{
+    background:#0b0b0b; border:1px solid #1f1f1f; border-radius:16px;
+    padding:14px 16px; font-size:18px;
+  }
+  .field b{ color:var(--accent); font-weight:700; }
+
+  .actions{
+    margin-top:18px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
+  }
+  .btn{
+    padding:12px 18px; border-radius:999px; border:2px solid var(--accent);
+    background:rgba(0,101,59,.15); color:#fff; text-decoration:none; font-size:16px; cursor:pointer;
+    transition:.2s;
+  }
+  .btn:hover{ background:rgba(0,101,59,.3); box-shadow:0 0 14px rgba(0,101,59,.35); transform:translateY(-1px); }
+  .btn.secondary{ border-color:#2b2b2b; background:#0b0b0b; }
+  .note{ text-align:center; color:#cbd9d3; font-size:12px; margin-top:8px; }
+
+  .pair{ display:flex; flex-direction:column; gap:12px; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="card">
+    <div id="emoji" class="emoji">🏉</div>
     <h1>Jouw BrigandZe Paspoort</h1>
-    <div class="field"><b>Naam:</b> <span id="naam">—</span></div>
-    <div class="field"><b>Inner Rugby Dier:</b> <span id="dier">—</span></div>
-    <div class="field"><b>Karaktertrek:</b> <span id="beschrijving">—</span></div>
-    <div class="field"><b>Rugbypositie:</b> <span id="positie">—</span></div>
-    <div class="field"><b>Tagline:</b> <span id="tagline">—</span></div>
+    <div class="subtitle">Integrity • Respect • Solidarity • Passion • Discipline</div>
 
-    <a id="mailto" class="btn" href="#">Open e-mail</a>
-    <div class="small">Probleem met de mailknop? Kopieer bovenstaande info en mail jezelf.</div>
+    <div class="grid">
+      <div class="pair">
+        <div class="field"><b>Naam:</b> <span id="naam">—</span></div>
+        <div class="field"><b>Inner Rugby Dier:</b> <span id="dier">—</span></div>
+        <div class="field"><b>Rugbypositie:</b> <span id="positie">—</span></div>
+      </div>
+      <div class="pair">
+        <div class="field"><b>Karaktertrek:</b> <span id="beschrijving">—</span></div>
+        <div class="field"><b>Tagline:</b> <span id="tagline">—</span></div>
+        <div class="field"><b>Jouw e-mail:</b> <span id="mail">—</span></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a id="mailto" class="btn" href="#">Open e-mail</a>
+      <a class="btn" href="https://brigandze.be/initiaties/" target="_blank" rel="noopener">Ontdek initiaties</a>
+      <a id="copyLink" class="btn secondary" href="#">Kopieer paspoort-link</a>
+    </div>
+    <div class="note" id="copied" style="display:none;">Link gekopieerd ✅</div>
   </div>
 </div>
 
 <script>
-  // lees parameters uit URL ?n=&a=&p=&t=&e=&k=
+  // --- Helpers ---
   const q = new URLSearchParams(location.search);
   const data = {
     naam: q.get('n') || '',
     dier: q.get('a') || '',
     positie: q.get('p') || '',
     tagline: q.get('t') || '',
-    beschrijving: q.get('k') || '', // k = karaktertrek
+    beschrijving: q.get('k') || '',
     mail: q.get('e') || ''
   };
 
+  // eerste emoji uit dier-string (indien aanwezig)
+  function firstEmoji(str){
+    const m = (str||'').match(/[\u{1F300}-\u{1FAFF}]/u);
+    return m ? m[0] : '🏉';
+  }
+
+  // render
   document.getElementById('naam').textContent = data.naam || '—';
   document.getElementById('dier').textContent = data.dier || '—';
-  document.getElementById('beschrijving').textContent = data.beschrijving || '—';
   document.getElementById('positie').textContent = data.positie || '—';
+  document.getElementById('beschrijving').textContent = data.beschrijving || '—';
   document.getElementById('tagline').textContent = data.tagline || '—';
+  document.getElementById('mail').textContent = data.mail || '—';
+  document.getElementById('emoji').textContent = firstEmoji(data.dier);
 
+  // mailto met uitnodigende tekst + links
   function esc(s){ return encodeURIComponent((s||'').replace(/\s+/g,' ').trim()); }
-  const subject = `BrigandZe Paspoort – ${data.naam}`;
-  const body = `Naam: ${data.naam}\nInner Rugby Dier: ${data.dier}\nKaraktertrek: ${data.beschrijving}\nRugbypositie: ${data.positie}\nTagline: ${data.tagline}\nwww.BrigandZe.be`;
-  const href = `mailto:${esc(data.mail)}?subject=${esc(subject)}&body=${esc(body)}`;
-  const mailBtn = document.getElementById('mailto');
-  mailBtn.href = href;
+  const selfUrl = location.href; // link naar dit paspoort
+  const initiatieUrl = "https://brigandze.be/initiaties/";
 
-  // op iOS/Android opent dit de mail-app; anders blijft de info zichtbaar
+  const subject = `Jouw BrigandZe Rugby Paspoort – ${data.naam||''}`;
+  const bodyLines = [
+    `Hey ${data.naam||'rugbyfan'},`,
+    ``,
+    `Hier is je BrigandZe Rugby Paspoort!`,
+    `• Inner Rugby Dier: ${data.dier||''}`,
+    `• Rugbypositie: ${data.positie||''}`,
+    data.tagline ? `• ${data.tagline}` : ``,
+    ``,
+    `Je paspoort bewaren of delen? Klik:`,
+    selfUrl,
+    ``,
+    `Zin om eens te proberen? Onze initiaties vind je hier:`,
+    initiatieUrl,
+    ``,
+    `Tot snel op het veld!`,
+    `— BrigandZe Rugby`
+  ].filter(Boolean).join('\r\n');
+
+  const mailHref = `mailto:${esc(data.mail||'')}?subject=${esc(subject)}&body=${esc(bodyLines)}`;
+  const mailBtn = document.getElementById('mailto');
+  mailBtn.href = mailHref;
+
+  // kopieer-link knop
+  document.getElementById('copyLink').addEventListener('click', (e)=>{
+    e.preventDefault();
+    navigator.clipboard.writeText(selfUrl).then(()=>{
+      const n = document.getElementById('copied');
+      n.style.display='block';
+      setTimeout(()=>{ n.style.display='none'; }, 1800);
+    });
+  });
 </script>
 </body>
 </html>
