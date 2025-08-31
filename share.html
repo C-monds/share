@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BrigandZe – Jouw Paspoort</title>
+<style>
+  :root{ --accent: rgb(0,101,59); }
+  body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:#000; color:#fff; }
+  .wrap{ max-width:700px; margin:0 auto; padding:24px; }
+  .card{ background:#0e0e0e; border:2px solid var(--accent); border-radius:18px; padding:20px; box-shadow:0 0 24px rgba(0,101,59,.3); }
+  h1{ margin:0 0 6px; color:var(--accent); font-size:24px; }
+  .field{ background:#0a0a0a; border:1px solid #1f1f1f; border-radius:12px; padding:10px 12px; margin:10px 0; }
+  .field b{ color:var(--accent); }
+  .btn{ display:inline-block; margin-top:14px; padding:12px 18px; border-radius:999px; border:2px solid var(--accent);
+        background:rgba(0,101,59,.15); color:#fff; text-decoration:none; }
+  .btn:hover{ background:rgba(0,101,59,.3); }
+  .small{ color:#bbb; font-size:12px; margin-top:10px }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>Jouw BrigandZe Paspoort</h1>
+    <div class="field"><b>Naam:</b> <span id="naam">—</span></div>
+    <div class="field"><b>Inner Rugby Dier:</b> <span id="dier">—</span></div>
+    <div class="field"><b>Karaktertrek:</b> <span id="beschrijving">—</span></div>
+    <div class="field"><b>Rugbypositie:</b> <span id="positie">—</span></div>
+    <div class="field"><b>Tagline:</b> <span id="tagline">—</span></div>
+
+    <a id="mailto" class="btn" href="#">Open e-mail</a>
+    <div class="small">Probleem met de mailknop? Kopieer bovenstaande info en mail jezelf.</div>
+  </div>
+</div>
+
+<script>
+  // lees parameters uit URL ?n=&a=&p=&t=&e=&k=
+  const q = new URLSearchParams(location.search);
+  const data = {
+    naam: q.get('n') || '',
+    dier: q.get('a') || '',
+    positie: q.get('p') || '',
+    tagline: q.get('t') || '',
+    beschrijving: q.get('k') || '', // k = karaktertrek
+    mail: q.get('e') || ''
+  };
+
+  document.getElementById('naam').textContent = data.naam || '—';
+  document.getElementById('dier').textContent = data.dier || '—';
+  document.getElementById('beschrijving').textContent = data.beschrijving || '—';
+  document.getElementById('positie').textContent = data.positie || '—';
+  document.getElementById('tagline').textContent = data.tagline || '—';
+
+  function esc(s){ return encodeURIComponent((s||'').replace(/\s+/g,' ').trim()); }
+  const subject = `BrigandZe Paspoort – ${data.naam}`;
+  const body = `Naam: ${data.naam}\nInner Rugby Dier: ${data.dier}\nKaraktertrek: ${data.beschrijving}\nRugbypositie: ${data.positie}\nTagline: ${data.tagline}\nwww.BrigandZe.be`;
+  const href = `mailto:${esc(data.mail)}?subject=${esc(subject)}&body=${esc(body)}`;
+  const mailBtn = document.getElementById('mailto');
+  mailBtn.href = href;
+
+  // op iOS/Android opent dit de mail-app; anders blijft de info zichtbaar
+</script>
+</body>
+</html>
