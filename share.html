@@ -60,8 +60,6 @@
   .btn:hover{ background:rgba(0,101,59,.3); box-shadow:0 0 14px rgba(0,101,59,.35); transform:translateY(-1px); }
   .btn.secondary{ border-color:#2b2b2b; background:#0b0b0b; }
   .note{ text-align:center; color:#cbd9d3; font-size:12px; margin-top:8px; }
-
-  .pair{ display:flex; flex-direction:column; gap:12px; }
 </style>
 </head>
 <body>
@@ -72,40 +70,32 @@
     <div class="subtitle">Integrity • Respect • Solidarity • Passion • Discipline</div>
 
     <div class="grid">
-      <div class="pair">
-        <div class="field"><b>Naam:</b> <span id="naam">—</span></div>
-        <div class="field"><b>Inner Rugby Dier:</b> <span id="dier">—</span></div>
-        <div class="field"><b>Rugbypositie:</b> <span id="positie">—</span></div>
-      </div>
-      <div class="pair">
-        <div class="field"><b>Karaktertrek:</b> <span id="beschrijving">—</span></div>
-        <div class="field"><b>Tagline:</b> <span id="tagline">—</span></div>
-        <div class="field"><b>Jouw e-mail:</b> <span id="mail">—</span></div>
-      </div>
+      <div class="field"><b>Naam:</b> <span id="naam">—</span></div>
+      <div class="field"><b>Inner Rugby Dier:</b> <span id="dier">—</span></div>
+      <div class="field"><b>Rugbypositie:</b> <span id="positie">—</span></div>
+      <div class="field"><b>Karaktertrek:</b> <span id="beschrijving">—</span></div>
+      <div class="field"><b>Tagline:</b> <span id="tagline">—</span></div>
     </div>
 
     <div class="actions">
-      <a id="mailto" class="btn" href="#">Open e-mail</a>
+      <button id="shareBtn" class="btn">Delen</button>
       <a class="btn" href="https://brigandze.be/initiaties/" target="_blank" rel="noopener">Ontdek initiaties</a>
-      <a id="copyLink" class="btn secondary" href="#">Kopieer paspoort-link</a>
     </div>
     <div class="note" id="copied" style="display:none;">Link gekopieerd ✅</div>
   </div>
 </div>
 
 <script>
-  // --- Helpers ---
+  // --- Data uit URL ---
   const q = new URLSearchParams(location.search);
   const data = {
     naam: q.get('n') || '',
     dier: q.get('a') || '',
     positie: q.get('p') || '',
     tagline: q.get('t') || '',
-    beschrijving: q.get('k') || '',
-    mail: q.get('e') || ''
+    beschrijving: q.get('k') || ''
   };
 
-  // eerste emoji uit dier-string (indien aanwezig)
   function firstEmoji(str){
     const m = (str||'').match(/[\u{1F300}-\u{1FAFF}]/u);
     return m ? m[0] : '🏉';
@@ -117,45 +107,37 @@
   document.getElementById('positie').textContent = data.positie || '—';
   document.getElementById('beschrijving').textContent = data.beschrijving || '—';
   document.getElementById('tagline').textContent = data.tagline || '—';
-  document.getElementById('mail').textContent = data.mail || '—';
   document.getElementById('emoji').textContent = firstEmoji(data.dier);
 
-  // mailto met uitnodigende tekst + links
-  function esc(s){ return encodeURIComponent((s||'').replace(/\s+/g,' ').trim()); }
-  const selfUrl = location.href; // link naar dit paspoort
+  // share knop
+  const shareBtn = document.getElementById('shareBtn');
+  const selfUrl = location.href;
   const initiatieUrl = "https://brigandze.be/initiaties/";
 
-  const subject = `Jouw BrigandZe Rugby Paspoort – ${data.naam||''}`;
-  const bodyLines = [
-    `Hey ${data.naam||'rugbyfan'},`,
-    ``,
-    `Hier is je BrigandZe Rugby Paspoort!`,
-    `• Inner Rugby Dier: ${data.dier||''}`,
-    `• Rugbypositie: ${data.positie||''}`,
-    data.tagline ? `• ${data.tagline}` : ``,
-    ``,
-    `Je paspoort bewaren of delen? Klik:`,
-    selfUrl,
-    ``,
-    `Zin om eens te proberen? Onze initiaties vind je hier:`,
-    initiatieUrl,
-    ``,
-    `Tot snel op het veld!`,
-    `— BrigandZe Rugby`
-  ].filter(Boolean).join('\r\n');
+  const shareText =
+    `Hier is mijn BrigandZe Rugby Paspoort!\n\n`+
+    `Naam: ${data.naam}\n`+
+    `Dier: ${data.dier}\n`+
+    `Positie: ${data.positie}\n`+
+    `${data.tagline ? "Tagline: "+data.tagline+"\n" : ""}`+
+    `Bekijk mijn paspoort: ${selfUrl}\n`+
+    `Ontdek onze initiaties: ${initiatieUrl}\n\n`+
+    `Tot op het veld! — BrigandZe Rugby`;
 
-  const mailHref = `mailto:${esc(data.mail||'')}?subject=${esc(subject)}&body=${esc(bodyLines)}`;
-  const mailBtn = document.getElementById('mailto');
-  mailBtn.href = mailHref;
-
-  // kopieer-link knop
-  document.getElementById('copyLink').addEventListener('click', (e)=>{
-    e.preventDefault();
-    navigator.clipboard.writeText(selfUrl).then(()=>{
-      const n = document.getElementById('copied');
-      n.style.display='block';
-      setTimeout(()=>{ n.style.display='none'; }, 1800);
-    });
+  shareBtn.addEventListener('click', ()=>{
+    if (navigator.share) {
+      navigator.share({
+        title: 'BrigandZe Paspoort',
+        text: shareText,
+        url: selfUrl
+      }).catch(err=>console.log('Share canceled', err));
+    } else {
+      // fallback: link kopiëren
+      navigator.clipboard.writeText(selfUrl).then(()=>{
+        document.getElementById('copied').style.display='block';
+        setTimeout(()=>{ document.getElementById('copied').style.display='none'; }, 2000);
+      });
+    }
   });
 </script>
 </body>
